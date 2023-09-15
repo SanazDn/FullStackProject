@@ -1,0 +1,83 @@
+{
+  "name": "@rhizone-lms/webapp",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": "^18.14.0",
+    "yarn": "^1.22.19"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "develop": "BROWSER=none REACT_APP_API_ORIGIN=http://api.rhi.zone-development react-scripts start",
+    "eslint:check": "eslint 'src/**/*.{ts,tsx}'",
+    "eslint:fix": "eslint --fix 'src/**/*.{ts,tsx}'",
+    "delint": "yarn eslint:fix; yarn prettier:write",
+    "prettier:check": "prettier --check 'src/**/*.{ts,tsx,css}'",
+    "prettier:write": "prettier --write 'src/**/*.{ts,tsx,css}'",
+    "test": "TZ=UTC react-scripts test"
+  },
+  "dependencies": {
+    "@babel/core": "^7.20.12",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.119",
+    "@mui/material": "^5.11.8",
+    "@testing-library/dom": "^8.20.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.4.0",
+    "@types/luxon": "^3.2.0",
+    "@types/node": "^18.13.0",
+    "@types/react": "^18.0.27",
+    "@types/react-big-calendar": "^1.6.0",
+    "@types/react-dom": "^18.0.10",
+    "luxon": "^3.2.1",
+    "prettier": "^2.8.4",
+    "react": "^18.2.0",
+    "react-big-calendar": "^1.6.4",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
+    "react-scripts": "5.0.1",
+    "socket.io-client": "^4.6.0",
+    "typescript": "^4.9.5",
+    "web-vitals": "^3.1.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "plugin:react/recommended",
+      "plugin:jsx-a11y/recommended",
+      "plugin:react-hooks/recommended"
+    ],
+    "rules": {
+      "prefer-destructuring": "error",
+      "camelcase": [
+        "error",
+        {
+          "ignoreDestructuring": true,
+          "properties": "never"
+        }
+      ],
+      "linebreak-style": "error"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "singleQuote": true
+  }
+}

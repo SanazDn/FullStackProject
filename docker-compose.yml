@@ -1,0 +1,67 @@
+services:
+  api:
+    build: ./api/
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - API_HOST=0.0.0.0
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
+      - GITHUB_REDIRECT_URI
+      - MYSQL_DATABASE
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - NODE_ENV=development
+      - REDIS_HOST=redis
+      - SESSION_SECRET
+      - WEBAPP_ORIGIN
+  mysql:
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_USER
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysql ${MYSQL_DATABASE} --user=${MYSQL_USER} --password='${MYSQL_PASSWORD}' --silent --execute "SELECT 1;"
+      interval: 10s
+      timeout: 10s
+      retries: 12
+  flyway:
+    build: ./db/
+    command: migrate
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - FLYWAY_CONNECT_RETRIES=10
+      - FLYWAY_PASSWORD=${MYSQL_PASSWORD}
+      - FLYWAY_URL=jdbc:mysql://mysql/${MYSQL_DATABASE}
+      - FLYWAY_USER=${MYSQL_USER}
+  nginx:
+    build:
+      context: ./nginx/
+      args:
+        - BUILD_ENV=development
+    depends_on:
+      - api
+      - webapp
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "80:80"
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+  webapp:
+    build:
+      context: ./webapp/
+      args:
+        - REACT_APP_API_ORIGIN=http://api.rhi.zone-development
+        - REACT_APP_ROLLBAR_ACCESS_TOKEN=

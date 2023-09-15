@@ -1,0 +1,49 @@
+version: "3.7"
+
+secrets:
+  GITHUB_CLIENT_ID:
+    external: true
+  GITHUB_CLIENT_SECRET:
+    external: true
+  MYSQL_DATABASE:
+    external: true
+  MYSQL_HOST:
+    external: true
+  MYSQL_PASSWORD:
+    external: true
+  MYSQL_USER:
+    external: true
+  ROLLBAR_SERVER_ACCESS_TOKEN:
+    external: true
+  SESSION_SECRET:
+    external: true
+
+services:
+  api:
+    environment:
+      - API_HOST=0.0.0.0
+      - GITHUB_REDIRECT_URI=https://api.rhi.zone/auth/github/callback
+      - NODE_ENV=production
+      - REDIS_HOST=redis
+      - WEBAPP_ORIGIN=https://rhi.zone
+    image: ghcr.io/opentree-education/rhizone-lms_api:latest
+    secrets:
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
+      - MYSQL_DATABASE
+      - MYSQL_HOST
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - ROLLBAR_SERVER_ACCESS_TOKEN
+      - SESSION_SECRET
+  nginx:
+    image: ghcr.io/opentree-education/rhizone-lms_nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
+  redis:
+    image: redis:6.2-alpine
+  webapp:
+    image: ghcr.io/opentree-education/rhizone-lms_webapp:latest
